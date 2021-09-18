@@ -1,29 +1,17 @@
 package com.example.javaspringmysqltelegramlinkbot;
 
-import org.apache.commons.io.FileUtils;
+import com.example.javaspringmysqltelegramlinkbot.entity.Links;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import static java.lang.Math.toIntExact;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
-
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.List;
 
 @SpringBootApplication
 public class JavaSpringMysqlTelegramLinkbotApplication extends TelegramLongPollingBot {
@@ -48,94 +36,69 @@ public class JavaSpringMysqlTelegramLinkbotApplication extends TelegramLongPolli
 
         Message incomingMessage = update.getMessage(); // Write the incoming message to the variable
 
-        String message_text = update.getCallbackQuery().getMessage().getText();
-        String call_data = update.getCallbackQuery().getData();
-        long message_id = update.getCallbackQuery().getMessage().getMessageId();
-        long chat_id = update.getCallbackQuery().getMessage().getChatId();
+        String message_text = update.getMessage().getText();
+
+        long message_id = update.getMessage().getMessageId();
+        long chat_id = update.getMessage().getChatId();
 
         if (update.hasCallbackQuery()) {
 
-            sendInlineMessage(call_data, incomingMessage, chat_id, message_id);
+            String call_data = update.getCallbackQuery().getData();
+      //      sendInlineMessage(message_text, call_data, incomingMessage, chat_id, message_id);
 
         } else if (incomingMessage == null || !incomingMessage.getText().matches("wikipedia.com")) {
 
-         //   sendMenuMessage(incomingMessage.getText());
+            sendFunMessage("kek-pek1", incomingMessage, chat_id, message_id);
 
         } else if (incomingMessage.getText().matches("wikipedia.com")){
 
-         //   sendTechMessage(incomingMessage, "Enter bot command or wiki link 1");
+            sendFunMessage("kek-pek2", incomingMessage, chat_id, message_id);
 
         } else {
 
-         //   sendTechMessage(incomingMessage, "Enter bot command or wiki link 2");
+            sendFunMessage("kek-pek3", incomingMessage, chat_id, message_id);
 
         }
     }
 
-    private void sendInlineMessage(String call_data, Message incomingMessage, long chat_id, long message_id) {
-
-            switch (call_data) {
-                case Config.SAVE_MSG:
-                    sendCommandMessage(incomingMessage, chat_id, message_id);
-                    break;
-                case Config.DELETE_MSG:
-                    sendCommandMessage(incomingMessage, chat_id, message_id);
-                    break;
-                case Config.VOTE_UP:
-                    sendCommandMessage(incomingMessage, chat_id, message_id);
-                    break;
-                case Config.VOTE_DOWN:
-                    sendCommandMessage(incomingMessage, chat_id, message_id);
-                    break;
-                default:
-                    String commandMessage = "Не знаем такого";
-                    break;
-            }
-
+    private void sendInlineMessage(String message_text, String call_data, Message incomingMessage, long chat_id, long message_id) {
         try {
             SendMessage sendMessage = new SendMessage()
                     .enableMarkdown(true)
-                    .setChatId(replyToMessage.getChatId().toString())
-                    .setText(String.valueOf(funlink));
-            execute(sendMessage.setReplyMarkup(KeyboardFactory.setupInlineKeyboard(rate)));
+                    .setChatId(incomingMessage.getChatId().toString())
+                    .setText(String.valueOf(call_data));
+            execute(sendMessage.setReplyMarkup(KeyboardFactory.setupInlineKeyboard()));
 
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
-//    private void sendMenuMessage(String call_data) {
-//
-//        switch (incomingMessage.getText()) {
-//            case "/notes":
-//                monthString = "Январь";
-//                break;
-//            case "/help":
-//                monthString = "Февраль";
-//                break;
-//            case "/fun":
-//                monthString = "Март";
-//                break;
-//            case "/del":
-//                monthString = "Апрель";
-//                break;
-//            default: monthString = "Не знаем такого";
-//                break;
-//        }
-//
-//        ArrayList<String> queries = SingletonMongo.main("answer", "deleter", "fun", replyToMessage.getChatId());
-//        String funlink = queries.get(0).toString();
-//        String rate  = queries.get(1).toString();
-//
-//        try {
-//            SendMessage sendMessage = new SendMessage()
-//                    .enableMarkdown(true)
-//                    .setChatId(replyToMessage.getChatId().toString())
-//                    .setText(String.valueOf(funlink));
-//            execute(sendMessage.setReplyMarkup(KeyboardFactory.setupInlineKeyboard(rate)));
-//
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void sendTechMessage(String message_text, Message incomingMessage, long chat_id, long message_id) {
+        try {
+            SendMessage sendMessage = new SendMessage()
+                    .enableMarkdown(true)
+                    .setChatId(incomingMessage.getChatId().toString())
+                    .setText(message_text);
+            execute(sendMessage.setReplyMarkup(KeyboardFactory.setupBaseKeyboard()));
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendFunMessage(String message_text, Message incomingMessage, long chat_id, long message_id) {
+        try {
+            String funlink = Dbconnect.fromBase();
+
+            SendMessage sendMessage = new SendMessage()
+                    .enableMarkdown(true)
+                    .setChatId(incomingMessage.getChatId().toString())
+                    .setText(String.valueOf(funlink));
+            execute(sendMessage.setReplyMarkup(KeyboardFactory.setupInlineKeyboard()));
+
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
 }

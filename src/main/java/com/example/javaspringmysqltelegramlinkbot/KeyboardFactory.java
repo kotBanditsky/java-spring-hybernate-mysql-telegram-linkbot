@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KeyboardFactory {
-    public static ReplyKeyboard setupInlineKeyboard(String rate) {
+    public static ReplyKeyboard setupInlineKeyboard() {
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
@@ -19,7 +19,7 @@ public class KeyboardFactory {
         rowInline.add(new InlineKeyboardButton().setText(Config.SAVE_MSG).setCallbackData(Config.SAVE_MSG));
         rowInline.add(new InlineKeyboardButton().setText(Config.DELETE_MSG).setCallbackData(Config.DELETE_MSG));
         rowInline.add(new InlineKeyboardButton().setText(Config.VOTE_UP).setCallbackData(Config.VOTE_UP));
-        rowInline.add(new InlineKeyboardButton().setText(String.valueOf(rate)).setCallbackData(Config.RATING));
+     //   rowInline.add(new InlineKeyboardButton().setText(String.valueOf(rate)).setCallbackData(Config.RATING));
         rowInline.add(new InlineKeyboardButton().setText(Config.VOTE_DOWN).setCallbackData(Config.VOTE_DOWN));
 
         rowsInline.add(rowInline);

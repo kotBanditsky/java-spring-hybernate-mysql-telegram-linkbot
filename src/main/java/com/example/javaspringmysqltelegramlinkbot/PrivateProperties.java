@@ -9,7 +9,7 @@ public class PrivateProperties extends Properties {
 
     public PrivateProperties() {
         try {
-            this.load(new FileInputStream(new File("resources/private.config")));
+            this.load(new FileInputStream(new File("src/main/resources/private.config")));
         } catch (IOException e) {
             e.printStackTrace();
         }
