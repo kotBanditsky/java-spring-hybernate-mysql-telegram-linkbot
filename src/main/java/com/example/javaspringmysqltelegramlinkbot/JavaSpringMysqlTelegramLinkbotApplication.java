@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class JavaSpringMysqlTelegramLinkbotApplication extends TelegramLongPollingBot {
 
-
     public int flag = 0;
     public String getBotUsername() {
         return Config.TELEGRAM_BOT_USERNAME;
@@ -22,14 +21,14 @@ public class JavaSpringMysqlTelegramLinkbotApplication extends TelegramLongPolli
 
     public static void main(String[] args) {
         try {
-            ApiContextInitializer.init(); // Initializing api
-            new TelegramBotsApi().registerBot(new JavaSpringMysqlTelegramLinkbotApplication()); // Create a new bot
+            ApiContextInitializer.init();
+            new TelegramBotsApi().registerBot(new JavaSpringMysqlTelegramLinkbotApplication());
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
 
-    public void onUpdateReceived(Update update) { // Instructions when receiving a message
+    public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
             sendCallbackMessage(update);
         } else if (update.getMessage() == null || !(update.getMessage().getText()).startsWith("https://www.wikipedia.org/")) {
@@ -60,22 +59,24 @@ public class JavaSpringMysqlTelegramLinkbotApplication extends TelegramLongPolli
 
         switch (incomingMessage.getMessage().getText()) {
             case "/fun": funlink = Dbconnect.fromBase(); flag = 1; break;
-            case "/help": funlink = "Инструкция: /fun - получить новую статью, /top - получить 10 самых популярных статей. Для добавления новой статьи в базу - отправьте боту ссылку на википедию."; flag = 0; break;
-            case "/top": funlink = "Топ 10 статей по рейтингу"; flag = 0; break;
-            default: funlink = "Что-то пошло не так"; flag = 0;
+            case "/help": funlink = "Instructions: /fun - get a new article, /top - get the 10 most popular articles. To add a new article to the database - send the bot a link to Wikipedia."; flag = 0; break;
+            case "/top": funlink = Dbconnect.getTop(); flag = 0; break;
+            default: funlink = "Something went wrong"; flag = 0;
         }
 
         sendMessage(funlink, flag, incomingMessage.getMessage());
     }
 
     private void sendSaveMessage(Update incomingMessage) {
+        flag = 0;
         String answer = Dbconnect.addBase(incomingMessage.getMessage().getText());
         sendMessage(answer, flag, incomingMessage.getMessage());
     }
 
     private void sendCallbackMessage(Update incomingMessage) {
+        flag = 0;
         String rate = Dbconnect.rateLink(incomingMessage.getCallbackQuery().getMessage().getText(), incomingMessage.getCallbackQuery().getData());
-        String answer = "Ваш голос учтен, текущий рейтинг статьи: " + rate;
+        String answer = "Your vote has been taken, the current rating of the article: " + rate;
         sendMessage(answer, flag, incomingMessage.getCallbackQuery().getMessage());
     }
 

@@ -4,9 +4,9 @@ import com.example.javaspringmysqltelegramlinkbot.entity.Links;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -30,9 +30,9 @@ public class Dbconnect {
             List<String> funs = session.createQuery("select link from Links").getResultList();
 
             if (funs.contains(wikiLink)) {
-                answer = "Эта ссылка уже есть в базе!";
+                answer = "This link is already in the database!";
             } else {
-                answer = "Ссылка успешно добавлена в базу!";
+                answer = "The link was successfully added to the database!";
                 Links link = new Links(wikiLink, 0);
                 session.save(link);
                 session.getTransaction().commit();
@@ -98,15 +98,44 @@ public class Dbconnect {
             }
 
             session.getTransaction().commit();
-
-           // funLink = "Ваш голос учтен" + rate;
             return String.valueOf(rate);
 
         } finally {
             factory.close();
         }
+    }
 
+    public static String getTop() {
+        SessionFactory factory = new Configuration()
+                .configure("hibernate.cfg.xml")
+                .addAnnotatedClass(Links.class)
+                .buildSessionFactory();
 
+        Session session = null;
+        int rate = 0;
+
+        try {
+            session = factory.getCurrentSession();
+            session.beginTransaction();
+
+            List<Links> rates = session.createQuery("from Links").getResultList();
+
+            rates.sort(Comparator.comparing(Links::getRate).reversed());
+
+            int count = 1;
+            StringBuffer sBuffer = new StringBuffer("Top rated Wiki articles:" + System.lineSeparator() + System.lineSeparator());
+
+            for (int i = 0; i < 10; i++){
+                sBuffer.append(count + ". " + rates.get(i).getLink() + " Rate: "+ rates.get(i).getRate() + System.lineSeparator());
+                count++;
+            }
+
+            session.getTransaction().commit();
+            return String.valueOf(sBuffer);
+
+        } finally {
+            factory.close();
+        }
     }
 
 }
