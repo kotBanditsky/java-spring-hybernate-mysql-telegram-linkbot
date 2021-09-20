@@ -16,8 +16,6 @@ public class KeyboardFactory {
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-        rowInline.add(new InlineKeyboardButton().setText(Config.SAVE_MSG).setCallbackData(Config.SAVE_MSG));
-        rowInline.add(new InlineKeyboardButton().setText(Config.DELETE_MSG).setCallbackData(Config.DELETE_MSG));
         rowInline.add(new InlineKeyboardButton().setText(Config.VOTE_UP).setCallbackData(Config.VOTE_UP));
      //   rowInline.add(new InlineKeyboardButton().setText(String.valueOf(rate)).setCallbackData(Config.RATING));
         rowInline.add(new InlineKeyboardButton().setText(Config.VOTE_DOWN).setCallbackData(Config.VOTE_DOWN));
@@ -32,7 +30,7 @@ public class KeyboardFactory {
         List<KeyboardRow> keyboard = new ArrayList<>(); // Create the keyboard (list of keyboard rows)
         KeyboardRow row = new KeyboardRow(); // Create a keyboard row
 
-        row.add("/notes"); // Set each button, you can also use KeyboardButton objects if you need something else than text
+        row.add("/top"); // Set each button, you can also use KeyboardButton objects if you need something else than text
         row.add("/help");
         row.add("/fun");
 
