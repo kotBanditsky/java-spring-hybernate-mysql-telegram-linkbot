@@ -1,6 +1,5 @@
 package com.example.javaspringmysqltelegramlinkbot;
 
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -17,7 +16,7 @@ public class KeyboardFactory {
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
         rowInline.add(new InlineKeyboardButton().setText(Config.VOTE_UP).setCallbackData(Config.VOTE_UP));
-     //   rowInline.add(new InlineKeyboardButton().setText(String.valueOf(rate)).setCallbackData(Config.RATING));
+     // rowInline.add(new InlineKeyboardButton().setText(String.valueOf(rate)).setCallbackData(Config.RATING));
         rowInline.add(new InlineKeyboardButton().setText(Config.VOTE_DOWN).setCallbackData(Config.VOTE_DOWN));
 
         rowsInline.add(rowInline);

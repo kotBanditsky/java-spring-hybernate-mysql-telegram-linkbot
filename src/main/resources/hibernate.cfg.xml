@@ -6,11 +6,8 @@
 <hibernate-configuration>
 
     <session-factory>
-
-        <property name="connection.url">jdbc:mysql://92.53.96.174:3306/ce32249_test?useSSL=false</property>
+        <property name="connection.url">jdbc:mysql://b236b9aad4e0a8:1b63ddec@eu-cdbr-west-01.cleardb.com/heroku_751d6dfd1a31966?reconnect=true</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.username">ce32249_test</property>
-        <property name="connection.password">piDB7htO1Miaf4Nh</property>
 
         <property name="current_session_context_class">thread</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>

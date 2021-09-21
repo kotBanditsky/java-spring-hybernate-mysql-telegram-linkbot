@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -73,7 +72,7 @@ public class Dbconnect {
     }
 
     public static String rateLink(String call_message_text, String call_data) {
-        SessionFactory factory = new Configuration()
+        SessionFactory factory =  new Configuration()
                 .configure("hibernate.cfg.xml")
                 .addAnnotatedClass(Links.class)
                 .buildSessionFactory();
